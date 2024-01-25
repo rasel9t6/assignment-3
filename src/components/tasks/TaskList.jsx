@@ -15,7 +15,7 @@ const TaskList = ({ tasks, onEdit, onDelete, onFav }) => {
   return (
     <div className='overflow-auto'>
       <table className='table-fixed overflow-auto xl:w-full'>
-        <thead className='border-2  border-[#2E3443]'>
+        <thead className='border-2 border-[#2E3443]'>
           <tr>
             <th className='p-4 pb-8 text-sm font-semibold capitalize w-[48px]'></th>
             <th className='p-4 border-r  border-[#2E3443] pb-8 text-sm font-semibold capitalize w-[300px]'>
@@ -64,7 +64,7 @@ const TaskList = ({ tasks, onEdit, onDelete, onFav }) => {
                   {task.tags.map((tag) => (
                     <li key={tag}>
                       <span
-                        className={`inline-block h-5 whitespace-nowrap rounded-[45px] px-2.5 text-sm capitalize text-[#F4F5F6]`}
+                        className={`inline-block shadow-lg h-5 whitespace-nowrap rounded-[45px] px-2.5 text-sm capitalize text-[#F4F5F6]`}
                         style={{
                           backgroundColor: getRandomColor(0.7),
                           textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
