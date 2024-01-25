@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import { validateForm } from '../../utils/utils';
 
 const TaskModal = ({ onSave, taskUpdate, onClose }) => {
   const [task, setTask] = useState(
@@ -11,7 +13,8 @@ const TaskModal = ({ onSave, taskUpdate, onClose }) => {
       isFavorite: false,
     }
   );
-
+  // Reference to the currently displayed toast
+  const toastRef = useRef(null);
   const isAdd = taskUpdate === null;
 
   const handleChange = (e) => {
@@ -28,6 +31,22 @@ const TaskModal = ({ onSave, taskUpdate, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validate form data
+    if (!validateForm(task)) {
+      // Dismiss the existing toast before displaying a new one
+      if (toastRef.current) {
+        toast.dismiss(toastRef.current);
+      }
+
+      // Display toast for delete
+      const newToast = toast.error(`Please fill in all fields.`);
+
+      // Store the reference to the current toast
+      toastRef.current = newToast;
+      return;
+    }
+
     onSave(task, isAdd);
     onClose();
   };
@@ -54,7 +73,6 @@ const TaskModal = ({ onSave, taskUpdate, onClose }) => {
                 id='title'
                 value={task.title}
                 onChange={handleChange}
-                required
               />
             </div>
 
@@ -67,7 +85,6 @@ const TaskModal = ({ onSave, taskUpdate, onClose }) => {
                 id='description'
                 value={task.description}
                 onChange={handleChange}
-                required
               ></textarea>
             </div>
 
@@ -81,7 +98,6 @@ const TaskModal = ({ onSave, taskUpdate, onClose }) => {
                   id='tags'
                   value={task.tags}
                   onChange={handleChange}
-                  required
                 />
               </div>
 
@@ -93,7 +109,6 @@ const TaskModal = ({ onSave, taskUpdate, onClose }) => {
                   id='priority'
                   value={task.priority}
                   onChange={handleChange}
-                  required
                 >
                   <option value=''>Select Priority</option>
                   <option value='low'>Low</option>

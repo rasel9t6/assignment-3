@@ -5,4 +5,18 @@ const getRandomColor = (alpha = 1) => {
   return randomColor;
 };
 
-export { getRandomColor };
+const validateForm = (task) => {
+  // form validation
+  if (
+    !task.title.trim() ||
+    !task.description.trim() ||
+    !Array.isArray(task.tags) ||
+    task.tags.length === 0 ||
+    !task.priority.trim()
+  ) {
+    return false;
+  }
+
+  return true;
+};
+export { getRandomColor, validateForm };
