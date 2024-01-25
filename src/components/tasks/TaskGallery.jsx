@@ -1,74 +1,118 @@
 import EmptyTask from './EmptyTask';
 import TaskList from './TaskList';
 import TaskController from './TaskController';
-import { defaultTasks } from '../../data/tasksData';
-import { useState } from 'react';
 import TaskModal from './TaskModal';
-const TaskGallery = () => {
-  const [tasks, setTasks] = useState(defaultTasks);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [taskUpdate, setTaskUpdate] = useState(null);
+import useTaskContext from '../../Hooks/useTaskContext';
+import { toast } from 'react-toastify';
+import { useRef } from 'react';
 
-  // handler's
+const TaskGallery = () => {
+  const { state, dispatch } = useTaskContext();
+  const { tasks, showAddModal, taskUpdate } = state;
+
+  // Reference to the currently displayed toast
+  const toastRef = useRef(null);
+
+  // handlers
   function handleAddEdit(newTask, isAdd) {
-    if (isAdd) {
-      setTasks(...tasks, newTask);
-    } else {
-      setTasks(
-        tasks.map((task) => {
-          if (task.id === newTask.id) {
-            return newTask;
-          }
-          return task;
-        })
-      );
+    dispatch({ type: 'ADD_EDIT_TASK', newTask, isAdd });
+    handleModalClose();
+
+    // Dismiss the existing toast before displaying a new one
+    if (toastRef.current) {
+      toast.dismiss(toastRef.current);
     }
 
-    handleModalClose();
+    // Display toast for add or edit
+    const action = isAdd ? 'added' : 'edited';
+    const newToast = toast.success(`Task ${action} successfully!`);
+
+    // Store the reference to the current toast
+    toastRef.current = newToast;
   }
 
   function handleEdit(task) {
-    setTaskUpdate(task);
-    setShowAddModal(true);
+    dispatch({
+      type: 'EDIT_TASK',
+      task,
+    });
   }
 
   function handleDelete(taskId) {
-    const tasksAfterDelete = tasks.filter((task) => task.id !== taskId);
-    setTasks(tasksAfterDelete);
+    const deletedTask = tasks.find((task) => task.id === taskId);
+
+    dispatch({
+      type: 'DELETE_TASK',
+      taskId,
+    });
+
+    // Dismiss the existing toast before displaying a new one
+    if (toastRef.current) {
+      toast.dismiss(toastRef.current);
+    }
+
+    // Display toast for delete
+    const newToast = toast.error(
+      `Task "${deletedTask.title}" deleted successfully!`
+    );
+
+    // Store the reference to the current toast
+    toastRef.current = newToast;
   }
 
   function handleDeleteAll() {
-    tasks.length = 0;
-    setTasks(...tasks);
+    dispatch({
+      type: 'DELETE_ALL_TASKS',
+    });
+
+    // Dismiss the existing toast before displaying a new one
+    if (toastRef.current) {
+      toast.dismiss(toastRef.current);
+    }
+
+    // Display toast for delete
+    const newToast = toast.error(`All tasks deleted successfully!`);
+
+    // Store the reference to the current toast
+    toastRef.current = newToast;
   }
 
   function handleFavorite(taskId) {
-    setTasks(
-      tasks.map((task) => {
-        if (task.id === taskId) {
-          return { ...task, isFavorite: !task.isFavorite };
-        } else {
-          return task;
-        }
-      })
+    const toggledTask = tasks.find((task) => task.id === taskId);
+    const newStatus = !toggledTask.isFavorite;
+    dispatch({
+      type: 'TOGGLE_FAVORITE',
+      taskId,
+    });
+
+    // Dismiss the existing toast before displaying a new one
+    if (toastRef.current) {
+      toast.dismiss(toastRef.current);
+    }
+
+    // Display toast for toggle favorite
+    const action = newStatus ? 'favorited' : 'unfavorited';
+    const newToast = toast.info(
+      `Task "${toggledTask.title}" ${action} successfully!`
     );
+
+    // Store the reference to the current toast
+    toastRef.current = newToast;
   }
 
   function handleSearch(searchTerm) {
-    if (searchTerm === '') {
-      setTasks(defaultTasks);
-    }
-    const filtered = tasks.filter((task) =>
-      task.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    setTasks(...filtered);
+    dispatch({
+      type: 'SEARCH_TASK',
+      searchTerm,
+    });
   }
 
   function handleModalClose() {
-    setShowAddModal(false);
-    setTaskUpdate(null);
+    dispatch({
+      type: 'CLOSE_MODAL',
+    });
   }
+
   return (
     <section className='mb-20'>
       {/* show modal */}
@@ -84,7 +128,7 @@ const TaskGallery = () => {
         <div className='rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16'>
           <TaskController
             onSearch={handleSearch}
-            onAdd={() => setShowAddModal(true)}
+            onAdd={() => dispatch({ type: 'EDIT_TASK', task: null })}
             onDeleteAll={handleDeleteAll}
           />
           {tasks.length > 0 ? (
@@ -102,4 +146,5 @@ const TaskGallery = () => {
     </section>
   );
 };
+
 export default TaskGallery;

@@ -1,24 +1,40 @@
 import { FaStar } from 'react-icons/fa';
+import { getRandomColor } from '../../utils/utils';
 const TaskList = ({ tasks, onEdit, onDelete, onFav }) => {
+
+
+  const handleDelete = (taskId) => {
+
+
+    // Display a confirmation dialog
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this task?'
+    );
+
+    // If the user confirms, proceed with onDelete
+    if (isConfirmed) {
+      onDelete(taskId);
+    }
+  };
   return (
     <div className='overflow-auto'>
       <table className='table-fixed overflow-auto xl:w-full'>
-        <thead>
+        <thead className='border-2 border-[#2E3443]'>
           <tr>
             <th className='p-4 pb-8 text-sm font-semibold capitalize w-[48px]'></th>
-            <th className='p-4 pb-8 text-sm font-semibold capitalize w-[300px]'>
+            <th className='p-4 border-r  border-[#2E3443] pb-8 text-sm font-semibold capitalize w-[300px]'>
               {' '}
               Title{' '}
             </th>
-            <th className='p-4 pb-8 text-sm font-semibold capitalize w-full'>
+            <th className='p-4 border-r  border-[#2E3443] pb-8 text-sm font-semibold capitalize w-full'>
               {' '}
               Description{' '}
             </th>
-            <th className='p-4 pb-8 text-sm font-semibold capitalize md:w-[350px]'>
+            <th className='p-4 border-r  border-[#2E3443] pb-8 text-sm font-semibold capitalize md:w-[350px]'>
               {' '}
               Tags{' '}
             </th>
-            <th className='p-4 pb-8 text-sm font-semibold capitalize md:w-[100px]'>
+            <th className='p-4 border-r  border-[#2E3443] pb-8 text-sm font-semibold capitalize md:w-[100px]'>
               {' '}
               Priority{' '}
             </th>
@@ -29,8 +45,6 @@ const TaskList = ({ tasks, onEdit, onDelete, onFav }) => {
           </tr>
         </thead>
         <tbody>
-          {/* map tr */}
-
           {tasks.map((task) => (
             <tr
               key={task.id}
@@ -53,7 +67,13 @@ const TaskList = ({ tasks, onEdit, onDelete, onFav }) => {
                 <ul className='flex justify-center gap-1.5 flex-wrap'>
                   {task.tags.map((tag) => (
                     <li key={tag}>
-                      <span className='inline-block h-5 whitespace-nowrap rounded-[45px] bg-[#00D991A1] px-2.5 text-sm capitalize text-[#F4F5F6]'>
+                      <span
+                        className={`inline-block h-5 whitespace-nowrap rounded-[45px] px-2.5 text-sm capitalize text-[#F4F5F6]`}
+                        style={{
+                          backgroundColor: getRandomColor(),
+                          textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
+                        }}
+                      >
                         {tag}
                       </span>
                     </li>
@@ -65,7 +85,7 @@ const TaskList = ({ tasks, onEdit, onDelete, onFav }) => {
                 <div className='flex items-center justify-center space-x-3'>
                   <button
                     className='text-red-500'
-                    onClick={() => onDelete(task.id)}
+                    onClick={() => handleDelete(task.id)}
                   >
                     Delete
                   </button>
