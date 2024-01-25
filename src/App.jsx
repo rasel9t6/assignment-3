@@ -11,6 +11,7 @@ function App() {
   return (
     <>
       <Navbar />
+
       <HeroSection />
       {/* TaskProvider Context API Provide Tasks for Consumer TaskGallery component */}
       <TaskProvider>

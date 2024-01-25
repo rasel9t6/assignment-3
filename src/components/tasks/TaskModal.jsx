@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 const TaskModal = ({ onSave, taskUpdate, onClose }) => {
   const [task, setTask] = useState(

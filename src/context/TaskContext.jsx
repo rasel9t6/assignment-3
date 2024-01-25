@@ -8,8 +8,6 @@ const initialState = {
 };
 
 const taskReducer = (state, action) => {
-  console.log(state);
-
   switch (action.type) {
     case 'ADD_EDIT_TASK':
       if (action.isAdd) {

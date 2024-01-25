@@ -5,9 +5,9 @@ const EmptyTask = () => {
       <img
         src={searchImg}
         alt='search-image'
-        className='w-[50%] h-[50%]'
+        className='w-[30%]'
       />
-      <p className='text-center text-3xl'>
+      <p className='text-center text-2xl'>
         No Tasks were Found. Please Add One...
       </p>
     </div>
