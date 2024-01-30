@@ -8,6 +8,8 @@ const initialState = {
 };
 
 const taskReducer = (state, action) => {
+  console.log(action);
+  console.log(state);
   switch (action.type) {
     case 'ADD_EDIT_TASK':
       if (action.isAdd) {
@@ -41,9 +43,9 @@ const taskReducer = (state, action) => {
     }
     case 'SEARCH_TASK': {
       if (action.searchTerm === '') {
-        return { ...state, tasks: defaultTasks };
+        return { ...state, tasks: state.tasks };
       } else {
-        const filtered = defaultTasks.filter((task) =>
+        const filtered = state.tasks.filter((task) =>
           task.title.toLowerCase().includes(action.searchTerm.toLowerCase())
         );
         return { ...state, tasks: filtered };
