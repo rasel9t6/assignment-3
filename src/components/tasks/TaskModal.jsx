@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const TaskModal = ({ onSave, taskUpdate, onClose }) => {
+const TaskModal = ({ onSave, taskUpdate, onCloseModal }) => {
   const [task, setTask] = useState(
     taskUpdate || {
       id: crypto.randomUUID(),
@@ -12,7 +12,8 @@ const TaskModal = ({ onSave, taskUpdate, onClose }) => {
     }
   );
 
-  const [isAdd, setIsAdd] = useState(Object.is(taskUpdate, null));
+  const isAdd = taskUpdate === null;
+
   const handleChange = (e) => {
     const name = e.target.name;
     let value = e.target.value;
@@ -94,7 +95,7 @@ const TaskModal = ({ onSave, taskUpdate, onClose }) => {
       <div className='mt-16 flex justify-center lg:mt-20'>
         <button
           className='rounded bg-red-600 px-4 py-2 text-white transition-all hover:opacity-80'
-          onClick={onClose}
+          onClick={onCloseModal}
         >
           Close
         </button>

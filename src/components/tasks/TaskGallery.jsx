@@ -9,10 +9,14 @@ const TaskGallery = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [taskUpdate, setTaskUpdate] = useState(null);
 
+  console.log('All tasks:', tasks);
+  console.log('Modals:', showAddModal);
+  console.log('Edited Tasks:', taskUpdate);
+
   // handler's
-  function handleAddEdit(newTask, isAdd) {
+  function handleAddEditTask(newTask, isAdd) {
     if (isAdd) {
-      setTasks(...tasks, newTask);
+      setTasks([...tasks, newTask]);
     } else {
       setTasks(
         tasks.map((task) => {
@@ -22,50 +26,48 @@ const TaskGallery = () => {
           return task;
         })
       );
+      setShowAddModal(true);
     }
-
-    handleModalClose();
   }
 
-  function handleEdit(task) {
+  function handleEditTask(task) {
     setTaskUpdate(task);
     setShowAddModal(true);
   }
 
-  function handleDelete(taskId) {
+  function handleDeleteTask(taskId) {
     const tasksAfterDelete = tasks.filter((task) => task.id !== taskId);
     setTasks(tasksAfterDelete);
   }
 
-  function handleDeleteAll() {
+  function handleDeleteAllClick() {
     tasks.length = 0;
-    setTasks(...tasks);
+    setTasks([...tasks]);
   }
 
   function handleFavorite(taskId) {
-    setTasks(
-      tasks.map((task) => {
-        if (task.id === taskId) {
-          return { ...task, isFavorite: !task.isFavorite };
-        } else {
-          return task;
-        }
-      })
-    );
+    const taskIndex = tasks.findIndex((task) => task.id === taskId);
+
+    const newTasks = [...tasks];
+
+    newTasks[taskIndex].isFavorite = !newTasks[taskIndex].isFavorite;
+
+    setTasks(newTasks);
   }
 
   function handleSearch(searchTerm) {
-    if (searchTerm === '') {
-      setTasks(defaultTasks);
-    }
+    console.log(searchTerm);
+
     const filtered = tasks.filter((task) =>
       task.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    setTasks(...filtered);
+    setTasks([...filtered]);
   }
-
-  function handleModalClose() {
+  function handleAddClick() {
+    setShowAddModal(true);
+  }
+  function handleCloseClick() {
     setShowAddModal(false);
     setTaskUpdate(null);
   }
@@ -74,8 +76,8 @@ const TaskGallery = () => {
       {/* show modal */}
       {showAddModal && (
         <TaskModal
-          onSave={handleAddEdit}
-          onClose={handleModalClose}
+          onSave={handleAddEditTask}
+          onCloseModal={handleCloseClick}
           taskUpdate={taskUpdate}
         />
       )}
@@ -84,14 +86,14 @@ const TaskGallery = () => {
         <div className='rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16'>
           <TaskController
             onSearch={handleSearch}
-            onAdd={() => setShowAddModal(true)}
-            onDeleteAll={handleDeleteAll}
+            onAddModal={handleAddClick}
+            onDeleteAll={handleDeleteAllClick}
           />
           {tasks.length > 0 ? (
             <TaskList
               tasks={tasks}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
+              onEdit={handleEditTask}
+              onDelete={handleDeleteTask}
               onFav={handleFavorite}
             />
           ) : (
