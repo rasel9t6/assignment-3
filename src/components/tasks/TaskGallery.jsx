@@ -8,6 +8,7 @@ const TaskGallery = () => {
   const [tasks, setTasks] = useState(defaultTasks);
   const [showAddModal, setShowAddModal] = useState(false);
   const [taskUpdate, setTaskUpdate] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   console.log('All tasks:', tasks);
   console.log('Modals:', showAddModal);
@@ -29,7 +30,11 @@ const TaskGallery = () => {
       setShowAddModal(true);
     }
   }
-
+  function getFilteredTasks() {
+    return tasks.filter((task) =>
+      task.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
   function handleEditTask(task) {
     setTaskUpdate(task);
     setShowAddModal(true);
@@ -54,15 +59,8 @@ const TaskGallery = () => {
 
     setTasks(newTasks);
   }
-
   function handleSearch(searchTerm) {
-    console.log(searchTerm);
-
-    const filtered = tasks.filter((task) =>
-      task.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    setTasks([...filtered]);
+    setSearchTerm(searchTerm.trim());
   }
   function handleAddClick() {
     setShowAddModal(true);
@@ -89,9 +87,9 @@ const TaskGallery = () => {
             onAddModal={handleAddClick}
             onDeleteAll={handleDeleteAllClick}
           />
-          {tasks.length > 0 ? (
+          {getFilteredTasks().length > 0 ? (
             <TaskList
-              tasks={tasks}
+              tasks={getFilteredTasks()}
               onEdit={handleEditTask}
               onDelete={handleDeleteTask}
               onFav={handleFavorite}
