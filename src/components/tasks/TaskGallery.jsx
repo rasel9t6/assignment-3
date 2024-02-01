@@ -12,7 +12,7 @@ import EmptyTask from './EmptyTask';
 import TaskList from './TaskList';
 import TaskController from './TaskController';
 import TaskModal from './TaskModal';
-import useTaskContext from '../../Hooks/useTaskContext';
+import useTaskContext from '../../hooks/useTasksContext';
 const TaskGallery = () => {
   const { state, dispatch } = useTaskContext();
   const { tasks, showAddModal, taskUpdate, searchTerm } = state;
@@ -78,7 +78,7 @@ const TaskGallery = () => {
       {showAddModal && (
         <TaskModal
           onSave={handleAddEditTask}
-          onCloseModal={toggleAddModal}
+          onCloseModal={() => toggleAddModal()}
           taskUpdate={taskUpdate}
         />
       )}
