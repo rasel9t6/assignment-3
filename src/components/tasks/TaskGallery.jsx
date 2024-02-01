@@ -1,81 +1,84 @@
+import {
+  TOGGLE_MODAL,
+  ADD_EDIT_TASK,
+  EDIT_TASK,
+  DELETE_TASK,
+  DELETE_ALL_TASK,
+  TOGGLE_FAVORITE,
+  SEARCH_TASKS,
+} from '../../constant/constant';
+
 import EmptyTask from './EmptyTask';
 import TaskList from './TaskList';
 import TaskController from './TaskController';
-import { defaultTasks } from '../../data/tasksData';
-import { useState } from 'react';
 import TaskModal from './TaskModal';
+import useTaskContext from '../../Hooks/useTaskContext';
 const TaskGallery = () => {
-  const [tasks, setTasks] = useState(defaultTasks);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [taskUpdate, setTaskUpdate] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const { state, dispatch } = useTaskContext();
+  const { tasks, showAddModal, taskUpdate, searchTerm } = state;
 
-  console.log('All tasks:', tasks);
-  console.log('Modals:', showAddModal);
-  console.log('Edited Tasks:', taskUpdate);
+  const filteredTasks = searchTerm
+    ? tasks.filter((task) =>
+        task.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : tasks;
 
-  // handler's
-  function handleAddEditTask(newTask, isAdd) {
-    if (isAdd) {
-      setTasks([...tasks, newTask]);
-    } else {
-      setTasks(
-        tasks.map((task) => {
-          if (task.id === newTask.id) {
-            return newTask;
-          }
-          return task;
-        })
-      );
-      setShowAddModal(true);
-    }
-  }
-  function getFilteredTasks() {
-    return tasks.filter((task) =>
-      task.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }
-  function handleEditTask(task) {
-    setTaskUpdate(task);
-    setShowAddModal(true);
-  }
+  const toggleAddModal = (task = null) => {
+    dispatch({
+      type: TOGGLE_MODAL,
+      task,
+    });
+  };
 
-  function handleDeleteTask(taskId) {
-    const tasksAfterDelete = tasks.filter((task) => task.id !== taskId);
-    setTasks(tasksAfterDelete);
-  }
+  const handleAddEditTask = (newTask, isAdd) => {
+    dispatch({
+      type: ADD_EDIT_TASK,
+      newTask,
+      isAdd,
+    });
+  };
 
-  function handleDeleteAllClick() {
-    tasks.length = 0;
-    setTasks([...tasks]);
-  }
+  const handleEditTask = (task) => {
+    dispatch({
+      type: EDIT_TASK,
+      task,
+    });
+  };
 
-  function handleFavorite(taskId) {
-    const taskIndex = tasks.findIndex((task) => task.id === taskId);
+  const handleDeleteTask = (taskId) => {
+    dispatch({
+      type: DELETE_TASK,
+      taskId,
+    });
+  };
 
-    const newTasks = [...tasks];
+  const handleDeleteAllClick = () => {
+    dispatch({
+      type: DELETE_ALL_TASK,
+    });
+  };
 
-    newTasks[taskIndex].isFavorite = !newTasks[taskIndex].isFavorite;
+  const handleFavorite = (taskId) => {
+    dispatch({
+      type: TOGGLE_FAVORITE,
+      taskId,
+    });
+  };
 
-    setTasks(newTasks);
-  }
-  function handleSearch(searchTerm) {
-    setSearchTerm(searchTerm.trim());
-  }
-  function handleAddClick() {
-    setShowAddModal(true);
-  }
-  function handleCloseClick() {
-    setShowAddModal(false);
-    setTaskUpdate(null);
-  }
+  const handleSearch = (searchTerm) => {
+    dispatch({
+      type: SEARCH_TASKS,
+      searchTerm,
+    });
+  };
+
   return (
     <section className='mb-20'>
       {/* show modal */}
       {showAddModal && (
         <TaskModal
           onSave={handleAddEditTask}
-          onCloseModal={handleCloseClick}
+          onCloseModal={toggleAddModal}
           taskUpdate={taskUpdate}
         />
       )}
@@ -84,12 +87,12 @@ const TaskGallery = () => {
         <div className='rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16'>
           <TaskController
             onSearch={handleSearch}
-            onAddModal={handleAddClick}
+            onAddModal={() => toggleAddModal()}
             onDeleteAll={handleDeleteAllClick}
           />
-          {getFilteredTasks().length > 0 ? (
+          {filteredTasks.length > 0 ? (
             <TaskList
-              tasks={getFilteredTasks()}
+              tasks={filteredTasks}
               onEdit={handleEditTask}
               onDelete={handleDeleteTask}
               onFav={handleFavorite}
@@ -102,4 +105,5 @@ const TaskGallery = () => {
     </section>
   );
 };
+
 export default TaskGallery;
