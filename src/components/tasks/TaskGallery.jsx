@@ -76,7 +76,7 @@ const TaskGallery = () => {
   };
 
   return (
-    <section className='mb-20'>
+    <section className='mb-20 section-style'>
       {/* show modal */}
       {showAddModal && (
         <TaskModal
@@ -86,8 +86,8 @@ const TaskGallery = () => {
         />
       )}
 
-      <div className='container'>
-        <div className='rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16'>
+      <div className='container '>
+        <div className='rounded-xl border dark:border-[rgba(206,206,206,0.12)]  border-[rgba(206,206,206,0.80)] shadow-sm section-style px-6 py-8 md:px-9 md:py-16'>
           <TaskController
             onSearch={handleSearch}
             onAddModal={() => toggleAddModal()}

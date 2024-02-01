@@ -53,21 +53,21 @@ const TaskModal = ({ onSave, taskUpdate, onCloseModal }) => {
 
   return (
     <>
-      <div className='bg-black bg-opacity-70 fixed inset-0 z-10'></div>
+      <div className='bg-black bg-opacity-80 dark:bg-opacity-70 fixed inset-0 z-10'></div>
       <div className='flex mt-12 items-center h-full justify-center fixed inset-0 z-20'>
         <form
           onSubmit={handleSubmit}
-          className='w-full  max-w-[740px]  rounded-xl border border-[#FEFBFB]/[36%] bg-[#191D26] p-9 max-md:px-4 lg:p-11 relative'
+          className='w-full section-style max-w-[740px]  rounded-xl border border-[#FEFBFB]/[36%] section-style p-9 max-md:px-4 lg:p-11 relative'
         >
-          <h2 className='mb-9 text-center text-2xl font-bold text-white lg:mb-11 lg:text-[28px]'>
+          <h2 className='mb-9 text-center text-2xl font-bold  lg:mb-11 lg:text-[28px]'>
             {isAdd ? 'Add New Task' : 'Edit Task'}
           </h2>
 
-          <div className='space-y-9 text-white lg:space-y-10'>
+          <div className='space-y-9  lg:space-y-10'>
             <div className='space-y-2 lg:space-y-3'>
               <label htmlFor='title'>Title</label>
               <input
-                className='block w-full rounded-md bg-[#2D323F] px-3 py-2.5'
+                className='block w-full rounded-md dark:bg-gray-800 bg-slate-100 dark:text-white px-3 py-2.5'
                 type='text'
                 name='title'
                 id='title'
@@ -79,7 +79,7 @@ const TaskModal = ({ onSave, taskUpdate, onCloseModal }) => {
             <div className='space-y-2 lg:space-y-3'>
               <label htmlFor='description'>Description</label>
               <textarea
-                className='block min-h-[120px] w-full rounded-md bg-[#2D323F] px-3 py-2.5 lg:min-h-[180px]'
+                className='block min-h-[120px] w-full rounded-md dark:bg-gray-800 bg-slate-100 dark:text-white px-3 py-2.5 lg:min-h-[180px]'
                 type='text'
                 name='description'
                 id='description'
@@ -92,7 +92,7 @@ const TaskModal = ({ onSave, taskUpdate, onCloseModal }) => {
               <div className='space-y-2 lg:space-y-3'>
                 <label htmlFor='tags'>Tags</label>
                 <input
-                  className='block w-full rounded-md bg-[#2D323F] px-3 py-2.5'
+                  className='block w-full rounded-md dark:bg-gray-800 bg-slate-100 dark:text-white px-3 py-2.5'
                   type='text'
                   name='tags'
                   id='tags'
@@ -104,7 +104,7 @@ const TaskModal = ({ onSave, taskUpdate, onCloseModal }) => {
               <div className='space-y-2 lg:space-y-3'>
                 <label htmlFor='priority'>Priority</label>
                 <select
-                  className='block w-full cursor-pointer rounded-md bg-[#2D323F] px-3 py-2.5'
+                  className='block w-full cursor-pointer rounded-md dark:bg-gray-800 bg-slate-100 dark:text-white px-3 py-2.5'
                   name='priority'
                   id='priority'
                   value={task.priority}

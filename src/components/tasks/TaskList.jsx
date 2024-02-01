@@ -13,24 +13,24 @@ const TaskList = ({ tasks, onEdit, onDelete, onFav }) => {
     }
   };
   return (
-    <div className='overflow-auto'>
+    <div className='overflow-auto section-style'>
       <table className='table-fixed overflow-auto xl:w-full'>
-        <thead className='border-2 border-[#2E3443]'>
+        <thead className='border-2 border-slate-300 dark:border-[#2E3443]'>
           <tr>
             <th className='p-4 pb-8 text-sm font-semibold capitalize w-[48px]'></th>
-            <th className='p-4 border-r  border-[#2E3443] pb-8 text-sm font-semibold capitalize w-[300px]'>
+            <th className='p-4 border-r  border-slate-300 dark:border-[#2E3443] pb-8 text-sm font-semibold capitalize w-[300px]'>
               {' '}
               Title{' '}
             </th>
-            <th className='p-4 border-r  border-[#2E3443] pb-8 text-sm font-semibold capitalize w-full'>
+            <th className='p-4 border-r  border-slate-300 dark:border-[#2E3443] pb-8 text-sm font-semibold capitalize w-full'>
               {' '}
               Description{' '}
             </th>
-            <th className='p-4 border-r  border-[#2E3443] pb-8 text-sm font-semibold capitalize md:w-[350px]'>
+            <th className='p-4 border-r  border-slate-300 dark:border-[#2E3443] pb-8 text-sm font-semibold capitalize md:w-[350px]'>
               {' '}
               Tags{' '}
             </th>
-            <th className='p-4 border-r  border-[#2E3443] pb-8 text-sm font-semibold capitalize md:w-[100px]'>
+            <th className='p-4 border-r  border-slate-300 dark:border-[#2E3443] pb-8 text-sm font-semibold capitalize md:w-[100px]'>
               {' '}
               Priority{' '}
             </th>
@@ -44,12 +44,12 @@ const TaskList = ({ tasks, onEdit, onDelete, onFav }) => {
           {tasks.map((task) => (
             <tr
               key={task.id}
-              className='border-b border-[#2E3443] [&>td]:align-baseline [&>td]:px-4 [&>td]:py-2'
+              className='border-b border-slate-300 dark:border-[#2E3443] [&>td]:align-baseline [&>td]:px-4 [&>td]:py-2'
             >
               <td>
                 <button onClick={() => onFav(task.id)}>
                   {task.isFavorite ? (
-                    <FaStar color='yellow' />
+                    <FaStar className='text-red-500 dark:text-yellow-300' />
                   ) : (
                     <FaStar color='gray' />
                   )}

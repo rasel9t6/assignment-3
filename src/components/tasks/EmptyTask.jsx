@@ -1,7 +1,7 @@
 import searchImg from '../../assets/searching-data.svg';
 const EmptyTask = () => {
   return (
-    <div className=' flex flex-col justify-center items-center'>
+    <div className='section-style flex flex-col justify-center items-center'>
       <img
         src={searchImg}
         alt='search-image'
