@@ -1,69 +1,84 @@
-import { useRef } from 'react';
+import {
+  TOGGLE_MODAL,
+  ADD_EDIT_TASK,
+  EDIT_TASK,
+  DELETE_TASK,
+  DELETE_ALL_TASK,
+  TOGGLE_FAVORITE,
+  SEARCH_TASKS,
+} from '../../utils/utils';
+
 import EmptyTask from './EmptyTask';
 import TaskList from './TaskList';
 import TaskController from './TaskController';
 import TaskModal from './TaskModal';
 import useTaskContext from '../../Hooks/useTaskContext';
-import { toast } from 'react-toastify';
-
 const TaskGallery = () => {
   const { state, dispatch } = useTaskContext();
-  const { tasks, showAddModal, taskUpdate } = state;
+  const { tasks, showAddModal, taskUpdate, searchTerm } = state;
 
-  // Add and Dismiss react-toast to fix multiple toast display at the same time.
-  const toastRef = useRef(null);
+  const filteredTasks = searchTerm
+    ? tasks.filter((task) =>
+        task.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : tasks;
 
-  const showToast = (message, type) => {
-    if (toastRef.current) {
-      toast.dismiss(toastRef.current);
-    }
-    const newToast = toast[type](message);
-    toastRef.current = newToast;
+  const toggleAddModal = (task = null) => {
+    dispatch({
+      type: TOGGLE_MODAL,
+      task,
+    });
   };
 
-  const handleAddEdit = (newTask, isAdd) => {
-    dispatch({ type: 'ADD_EDIT_TASK', newTask, isAdd });
-    handleModalClose();
-    showToast(`Task ${isAdd ? 'added' : 'edited'} successfully!`, 'success');
+  const handleAddEditTask = (newTask, isAdd) => {
+    dispatch({
+      type: ADD_EDIT_TASK,
+      newTask,
+      isAdd,
+    });
   };
 
-  const handleEdit = (task) => {
-    dispatch({ type: 'EDIT_TASK', task });
+  const handleEditTask = (task) => {
+    dispatch({
+      type: EDIT_TASK,
+      task,
+    });
   };
 
-  const handleDelete = (taskId) => {
-    const deletedTask = tasks.find((task) => task.id === taskId);
-    dispatch({ type: 'DELETE_TASK', taskId });
-    showToast(`Task "${deletedTask.title}" deleted successfully!`, 'error');
+  const handleDeleteTask = (taskId) => {
+    dispatch({
+      type: DELETE_TASK,
+      taskId,
+    });
   };
 
-  const handleDeleteAll = () => {
-    dispatch({ type: 'DELETE_ALL_TASKS' });
-    showToast('All tasks deleted successfully!', 'error');
+  const handleDeleteAllClick = () => {
+    dispatch({
+      type: DELETE_ALL_TASK,
+    });
   };
 
   const handleFavorite = (taskId) => {
-    const toggledTask = tasks.find((task) => task.id === taskId);
-    const newStatus = !toggledTask.isFavorite;
-    dispatch({ type: 'TOGGLE_FAVORITE', taskId });
-    const action = newStatus ? 'favorited' : 'unfavorited';
-    showToast(`Task "${toggledTask.title}" ${action} successfully!`, 'info');
+    dispatch({
+      type: TOGGLE_FAVORITE,
+      taskId,
+    });
   };
 
   const handleSearch = (searchTerm) => {
-    dispatch({ type: 'SEARCH_TASK', searchTerm });
-  };
-
-  const handleModalClose = () => {
-    dispatch({ type: 'CLOSE_MODAL' });
+    dispatch({
+      type: SEARCH_TASKS,
+      searchTerm,
+    });
   };
 
   return (
     <section className='mb-20'>
+      {/* show modal */}
       {showAddModal && (
         <TaskModal
-          onSave={handleAddEdit}
-          onClose={handleModalClose}
+          onSave={handleAddEditTask}
+          onCloseModal={() => toggleAddModal()}
           taskUpdate={taskUpdate}
         />
       )}
@@ -72,14 +87,14 @@ const TaskGallery = () => {
         <div className='rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16'>
           <TaskController
             onSearch={handleSearch}
-            onAdd={() => dispatch({ type: 'EDIT_TASK', task: null })}
-            onDeleteAll={handleDeleteAll}
+            onAddModal={() => toggleAddModal()}
+            onDeleteAll={handleDeleteAllClick}
           />
-          {tasks.length > 0 ? (
+          {filteredTasks.length > 0 ? (
             <TaskList
-              tasks={tasks}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
+              tasks={filteredTasks}
+              onEdit={handleEditTask}
+              onDelete={handleDeleteTask}
               onFav={handleFavorite}
             />
           ) : (

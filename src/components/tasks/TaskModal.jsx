@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { validateForm } from '../../utils/utils';
 
-const TaskModal = ({ onSave, taskUpdate, onClose }) => {
+const TaskModal = ({ onSave, taskUpdate, onCloseModal }) => {
   const [task, setTask] = useState(
     taskUpdate || {
       id: crypto.randomUUID(),
@@ -48,7 +48,7 @@ const TaskModal = ({ onSave, taskUpdate, onClose }) => {
     }
 
     onSave(task, isAdd);
-    onClose();
+    onCloseModal();
   };
 
   return (
@@ -122,7 +122,7 @@ const TaskModal = ({ onSave, taskUpdate, onClose }) => {
           <div className='mt-16 flex justify-between lg:mt-20'>
             <button
               className='rounded bg-red-600 px-4 py-2 text-white transition-all hover:opacity-80'
-              onClick={onClose}
+              onClick={onCloseModal}
             >
               Close
             </button>
