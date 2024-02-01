@@ -61,7 +61,7 @@ const TaskList = ({ tasks, onEdit, onDelete, onFav }) => {
               </td>
               <td>
                 <ul className='flex justify-center gap-1.5 flex-wrap'>
-                  {task.tags.map((tag) => (
+                  {task.tags?.map((tag) => (
                     <li key={tag}>
                       <span
                         className={`inline-block shadow-lg h-5 whitespace-nowrap rounded-[45px] px-2.5 text-sm capitalize text-[#F4F5F6]`}

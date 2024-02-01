@@ -1,5 +1,5 @@
-import { createContext, useReducer } from 'react';
-import { defaultTasks } from '../data/tasksData';
+import { createContext, useEffect, useReducer } from 'react';
+// import { defaultTasks } from '../data/tasksData';
 import {
   ADD_EDIT_TASK,
   EDIT_TASK,
@@ -12,11 +12,13 @@ import {
 
 export const TaskContext = createContext();
 
+const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+
 const initialState = {
-  tasks: defaultTasks,
+  tasks: storedTasks,
   showAddModal: false,
   taskUpdate: null,
-  searchTerm: '', // Added searchTerm to the initial state
+  searchTerm: '',
 };
 
 const taskReducer = (state, action) => {
@@ -82,6 +84,13 @@ const taskReducer = (state, action) => {
 
 export const TaskProvider = ({ children }) => {
   const [state, dispatch] = useReducer(taskReducer, initialState);
+  useEffect(() => {
+    // Check if state.tasks is not an empty array
+    if (state.tasks.length > 0) {
+      localStorage.setItem('tasks', JSON.stringify(state.tasks));
+    }
+  }, [state.tasks]);
+
   return (
     <TaskContext.Provider value={{ state, dispatch }}>
       {children}

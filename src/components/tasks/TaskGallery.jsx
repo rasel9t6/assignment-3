@@ -13,15 +13,18 @@ import TaskList from './TaskList';
 import TaskController from './TaskController';
 import TaskModal from './TaskModal';
 import useTaskContext from '../../Hooks/useTaskContext';
+import { useMemo } from 'react';
 const TaskGallery = () => {
   const { state, dispatch } = useTaskContext();
   const { tasks, showAddModal, taskUpdate, searchTerm } = state;
 
-  const filteredTasks = searchTerm
-    ? tasks.filter((task) =>
-        task.title.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : tasks;
+  const filteredTasks = useMemo(() => {
+    return searchTerm
+      ? tasks.filter((task) =>
+          task.title.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : tasks;
+  }, [searchTerm, tasks]);
 
   const toggleAddModal = (task = null) => {
     dispatch({
