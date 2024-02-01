@@ -15,7 +15,7 @@ export const TaskContext = createContext();
 const storedTasks = JSON.parse(localStorage.getItem('tasks'));
 
 const initialState = {
-  tasks: storedTasks,
+  tasks: storedTasks || [],
   showAddModal: false,
   taskUpdate: null,
   searchTerm: '',
@@ -85,10 +85,7 @@ const taskReducer = (state, action) => {
 export const TaskProvider = ({ children }) => {
   const [state, dispatch] = useReducer(taskReducer, initialState);
   useEffect(() => {
-    // Check if state.tasks is not an empty array
-    if (state.tasks.length > 0) {
-      localStorage.setItem('tasks', JSON.stringify(state.tasks));
-    }
+    localStorage.setItem('tasks', JSON.stringify(state.tasks));
   }, [state.tasks]);
 
   return (
