@@ -13,11 +13,25 @@ import TaskList from './TaskList';
 import TaskController from './TaskController';
 import TaskModal from './TaskModal';
 import useTaskContext from '../../Hooks/useTaskContext';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+import { toast } from 'react-toastify';
+
 const TaskGallery = () => {
   const { state, dispatch } = useTaskContext();
   const { tasks, showAddModal, taskUpdate, searchTerm } = state;
 
+  // Add and Dismiss react-toast to fix multiple toast display at the same time.
+  const toastRef = useRef(null);
+
+  const showToast = (message, type) => {
+    if (toastRef.current) {
+      toast.dismiss(toastRef.current);
+    }
+    const newToast = toast[type](message);
+    toastRef.current = newToast;
+  };
+
+  //Filtered tasks
   const filteredTasks = useMemo(() => {
     return searchTerm
       ? tasks.filter((task) =>
@@ -26,19 +40,14 @@ const TaskGallery = () => {
       : tasks;
   }, [searchTerm, tasks]);
 
-  const toggleAddModal = (task = null) => {
-    dispatch({
-      type: TOGGLE_MODAL,
-      task,
-    });
-  };
-
   const handleAddEditTask = (newTask, isAdd) => {
     dispatch({
       type: ADD_EDIT_TASK,
       newTask,
       isAdd,
     });
+
+    showToast(`Task ${isAdd ? 'added' : 'edited'} successfully!`, 'success');
   };
 
   const handleEditTask = (task) => {
@@ -49,29 +58,45 @@ const TaskGallery = () => {
   };
 
   const handleDeleteTask = (taskId) => {
+    const deletedTask = tasks.find((task) => task.id === taskId);
     dispatch({
       type: DELETE_TASK,
       taskId,
     });
+
+    showToast(`Task "${deletedTask.title}" deleted successfully!`, 'error');
   };
 
   const handleDeleteAllClick = () => {
     dispatch({
       type: DELETE_ALL_TASK,
     });
+    showToast('All tasks deleted successfully!', 'error');
   };
 
   const handleFavorite = (taskId) => {
+    const toggledTask = tasks.find((task) => task.id === taskId);
+    const newStatus = !toggledTask.isFavorite;
+    const action = newStatus ? 'favorited' : 'unfavorited';
+
     dispatch({
       type: TOGGLE_FAVORITE,
       taskId,
     });
+    showToast(`Task "${toggledTask.title}" ${action} successfully!`, 'info');
   };
 
   const handleSearch = (searchTerm) => {
     dispatch({
       type: SEARCH_TASKS,
       searchTerm,
+    });
+  };
+
+  const toggleAddModal = (task = null) => {
+    dispatch({
+      type: TOGGLE_MODAL,
+      task,
     });
   };
 

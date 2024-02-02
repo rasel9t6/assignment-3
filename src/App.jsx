@@ -13,7 +13,6 @@ function App() {
     <>
       <DarkModeProvider>
         <Navbar />
-
         <HeroSection />
         {/* TaskProvider Context API Provide Tasks for Consumer TaskGallery component */}
         <TaskProvider>
