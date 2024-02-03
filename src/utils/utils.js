@@ -6,13 +6,14 @@ const getRandomColor = (alpha = 1) => {
 };
 
 const validateForm = (task) => {
-  // form validation
+  // Form validation
   if (
     !task.title.trim() ||
     !task.description.trim() ||
     !Array.isArray(task.tags) ||
     task.tags.length === 0 ||
-    !task.priority.trim()
+    !task.priority.trim() ||
+    task.tags.some((tag) => tag.trim() === '')
   ) {
     return false;
   }
